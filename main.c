@@ -15,10 +15,10 @@ int main(int argc, char ** argv){
 	pthread_t thread[2];
 	pthread_create(&thread[0],0, pingPong, &c);
 	pthread_create(&thread[1],0, pingPong, &c);	
-	
-	printf("");
-	pthread_cond_signal(&c);
-	pthread_mutex_unlock(&MTX);
+	sleep(2);
+
+	//pthread_cond_signal(&c);
+	//pthread_mutex_unlock(&MTX);
 	
 	pthread_join(thread[0], NULL);	
 	pthread_join(thread[1], NULL);	
@@ -39,10 +39,10 @@ void * pingPong(void * val){
 			printf("\tPong\n");
 			ping = 1;		
 		}
-		//sleep(1);
+		count++;
+		
 		pthread_cond_signal(&c);
 		pthread_mutex_unlock(&MTX);
-		count++;
 	}
 }
 
