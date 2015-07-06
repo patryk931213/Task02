@@ -9,28 +9,25 @@ int count = 0;
 int arg;
 void*pingPong(void*);
 
-int main(int argc, char ** argv){
-	if(argv[1])
-		arg = atoi(argv[1]);
+int main(int argc, char ** argv){	
 	pthread_t thread[2];
+	if(argv[1]) 
+		arg = atoi(argv[1]);
+	else if(!argv[1])
+		return -1;
+
 	pthread_create(&thread[0],0, pingPong, &c);
 	pthread_create(&thread[1],0, pingPong, &c);	
-	sleep(2);
-
-	//pthread_cond_signal(&c);
-	//pthread_mutex_unlock(&MTX);
-	
+		
 	pthread_join(thread[0], NULL);	
 	pthread_join(thread[1], NULL);	
 }
 
 
 void * pingPong(void * val){
-	while(1){
-		if(count>arg) break;
-		pthread_cond_t * mutex = (pthread_cond_t*)val;
+	pthread_cond_t * mutex = (pthread_cond_t*)val;
+	while(count<arg){
 		pthread_mutex_lock(&MTX);
-		pthread_cond_wait(mutex, &MTX);
 		if(ping == 1){ 
 			printf("Ping\n");
 			ping = 0;
@@ -40,9 +37,12 @@ void * pingPong(void * val){
 			ping = 1;		
 		}
 		count++;
-		
+	
 		pthread_cond_signal(&c);
+		pthread_cond_wait(mutex, &MTX);
 		pthread_mutex_unlock(&MTX);
 	}
+	pthread_cond_signal(&c);
+	pthread_exit(0);
 }
 
