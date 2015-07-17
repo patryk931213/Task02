@@ -4,6 +4,9 @@
 pthread_mutex_t MTX = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t c = PTHREAD_COND_INITIALIZER;
 
+//test
+//test2
+
 int ping = 1;
 int count = 0;
 int arg;
